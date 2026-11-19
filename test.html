@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Week 10 網頁小遊戲：終極密碼</title>
+
+  <script>
+    var answer = Math.floor(Math.random() * 100) + 1;
+    var min = 1;
+    var max = 100;
+    var count = 0;
+    var historyLog = ""; // 儲存猜測紀錄的字串變數
+
+    // 1. href + alert：查看規則
+    function showRules() {
+      alert("【終極密碼規則】\n系統已隨機產生 1 到 100 之間的數字，試著用最少的次數猜中它！");
+    }
+
+    // 2. button + prompt + innerHTML：輸入猜測並更新畫面與紀錄
+    function guessNumber() {
+      var input = prompt("請輸入 " + min + " 到 " + max + " 之間的數字：", "");
+
+      if (input == null || input == "") {
+        return;
+      }
+
+      var num = parseInt(input);
+      count = count + 1;
+
+      if (num < min || num > max) {
+        alert("請輸入範圍內的數字（" + min + " ~ " + max + "）！");
+        count = count - 1;
+        return;
+      }
+
+      if (num == answer) {
+        document.getElementById("game-status").innerHTML =
+          "🎉 恭喜猜中！答案就是 <b>" + answer + "</b>，你總共猜了 " + count + " 次！";
+        historyLog = historyLog + "第 " + count + " 次：猜 " + num + "（猜中！）<br>";
+        document.getElementById("history").innerHTML = historyLog;
+        alert("賓果！你猜中了！");
+      } else if (num < answer) {
+        min = num + 1;
+        document.getElementById("game-status").innerHTML =
+          "太小了！目前範圍縮小為：<b>" + min + " ~ " + max + "</b>（已猜 " + count + " 次）";
+        historyLog = historyLog + "第 " + count + " 次：猜 " + num + "（太小）<br>";
+        document.getElementById("history").innerHTML = historyLog;
+      } else {
+        max = num - 1;
+        document.getElementById("game-status").innerHTML =
+          "太大了！目前範圍縮小為：<b>" + min + " ~ " + max + "</b>（已猜 " + count + " 次）";
+        historyLog = historyLog + "第 " + count + " 次：猜 " + num + "（太大）<br>";
+        document.getElementById("history").innerHTML = historyLog;
+      }
+    }
+
+    // 3. confirm：確認是否重新開始遊戲
+    function resetGame() {
+      if (confirm("重新開始一局新遊戲？") == true) {
+        answer = Math.floor(Math.random() * 100) + 1;
+        min = 1;
+        max = 100;
+        count = 0;
+        historyLog = ""; // 清空紀錄變數
+        document.getElementById("game-status").innerHTML = "已重新出題！目前範圍：<b>1 ~ 100</b>";
+        document.getElementById("history").innerHTML = "尚無紀錄";
+      }
+    }
+  </script>
+</head>
+
+<body>
+
+  <h2>互動多媒體 Week 10：終極密碼小遊戲</h2>
+  <hr />
+
+  <!-- 使用 a href 呼叫 alert -->
+  <p>
+    ▸ <a href="javascript:showRules()">點我看遊戲規則 (href + Alert)</a>
+  </p>
+
+  <!-- 使用 button 呼叫 prompt 與 innerHTML -->
+  <p>
+    <button type="button" onclick="guessNumber()">輸入數字猜猜看 (BTN + Prompt)</button>
+    <input type="button" value="重新開始 (Confirm)" onclick="resetGame()" />
+  </p>
+
+  <!-- 遊戲狀態顯示區 -->
+  <p id="game-status">目前範圍：<b>1 ~ 100</b>（點擊上方按鈕開始猜數字）</p>
+
+  <hr />
+  <p><b>猜測紀錄：</b></p>
+  <p id="history">尚無紀錄</p>
+
+  <hr />
+  <p><small>使用 Google Gemini 協助撰寫。</small></p>
+
+</body>
+</html>
